@@ -1,5 +1,4 @@
 from PIL import ImageDraw, Image, ImageFont
-import os
 
 class DrawFunction(object):
 
@@ -65,7 +64,13 @@ class DrawFunction(object):
         while text_width > self.Config.width:
             self.buf_list.insert(0, words.pop())
             text_width = self.get_line_width(' '.join(words))
-        return words
+        final_words = []
+        for word in words:
+            string = word.replace('\n', ' ')
+            if word == '':
+                string = word.replace('', ' ')
+            final_words.append(string)
+        return final_words
     # #### end of minor functions
     # #### here
 
@@ -74,21 +79,27 @@ class DrawFunction(object):
         first_font_color = True
         for line in self.lines:
             for word in line.split(" "):
-                added = False
-                if word[0] == "*":
-                    if first_font_color:
-                        self.lines_attrib.append(1)
-                    else:
-                        self.lines_attrib.append(0)
-                    first_font_color = not first_font_color
-                    added = True
-                if not added:
-                    if first_font_color:
+                if word:
+                    if word == '':
                         self.lines_attrib.append(0)
                     else:
-                        self.lines_attrib.append(1)
-                if word[len(word)-1] == "*":
-                    first_font_color = not first_font_color
+                        added = False
+                        if word[0] == "*":
+                            if first_font_color:
+                                self.lines_attrib.append(1)
+                            else:
+                                self.lines_attrib.append(0)
+                            first_font_color = not first_font_color
+                            added = True
+                        if not added:
+                            if first_font_color:
+                                self.lines_attrib.append(0)
+                            else:
+                                self.lines_attrib.append(1)
+                        if word[len(word)-1] == "*":
+                            first_font_color = not first_font_color
+                else:
+                    self.lines_attrib.append(0)
         # delete '*' from words
         for x in range(0, len(self.lines)):
             self.lines[x] = self.lines[x].replace("*", "")
@@ -111,17 +122,20 @@ class DrawFunction(object):
 
     def draw_align_center(self, lines):
         for line in lines:
-            self.indent_left = (self.Config.width - self.get_line_width(' '.join(line)))/2
+            string_wo_spaces = ''
+            for word in line:
+                if not word == ' ':
+                    string_wo_spaces += word
+                string_wo_spaces += ' '
+            self.indent_left = (self.Config.width - self.get_line_width(string_wo_spaces))/2
             self.line_height = self.get_max_height(' '.join(line))
             for word in line:
-                self.draw_word(word)
-                self.attrib_count += 1
+                if word == ' ':
+                    self.indent_left += self.get_line_width(' ')
+                else:
+                    self.draw_word(word)
+                    self.attrib_count += 1
             self.indent_top += self.line_height
-
-        # if text_width <= self.Config.width:
-        #     indent_left = (self.Config.width-text_width)/2
-        #     self.draw.text((indent_left, self.indent_top), text, fill=self.Config.font_color, font=self.font)
-        #     self.indent_top += self.get_max_height(text)
 
     def draw_word(self, word):
         if self.lines_attrib[self.attrib_count] == 0:

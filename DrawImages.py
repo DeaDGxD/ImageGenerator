@@ -24,15 +24,19 @@ def create_image():
     draw_function = DrawFunction(draw, Config, lines)
     draw_function.start_drawing()
 
-    img.save('images/'+folder_name+'/img'+str(x)+'.jpg')
+    img.save(folder_name+'/img'+str(x)+'.jpg')
 
 
 for file in os.listdir("teksty"):
     if file.endswith(".txt"):
         text_name = os.path.join("teksty", file)
-        folder_name = file[:-4]
+        folder_name = os.path.join('images/', file[:-4])
 
-        os.mkdir(os.path.join('images/', folder_name))
+        if os.path.isdir(folder_name):
+            for i in os.listdir(folder_name):
+                os.remove(os.path.join(folder_name, i))
+        else:
+            os.mkdir(folder_name)
 
         all_lines = open(text_name, mode='r', encoding='utf-8-sig')
         lines = []
@@ -44,7 +48,7 @@ for file in os.listdir("teksty"):
                 x += 1
                 lines = []
             else:
-                lines.append(line.strip('\n'))
+                lines.append(line)
         create_image()
         all_lines.close()
 
