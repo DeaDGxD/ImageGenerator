@@ -54,23 +54,40 @@ class DrawFunction(object):
                 self.font_size -= 1
                 self.set_font_size()
 
-    def adjust_lines_length(self, lines, empty = False):
+    def get_string_from_list(self, word_list):
+        string = ''
+        for word in word_list:
+            if not word == ' ':
+                string += word
+            string += ' '
+        return string[:-1]
+
+    def replace_blank_with_spaces(self, word_list):
+        final_words = []
+        for word in word_list:
+            if word == '\n':
+                string = word.replace('\n', ' ')
+            else:
+                string = word.strip('\n')
+            if word == '':
+                string = word.replace('', ' ')
+            final_words.append(string)
+        return final_words
+
+    def adjust_lines_length(self, lines, empty=False):
         if empty:
             words = self.buf_list
         else:
             words = self.buf_list + lines.split(" ")
         self.buf_list = []
-        text_width = self.get_line_width(' '.join(words))
+
+        words = self.replace_blank_with_spaces(words)
+        text_width = self.get_line_width(self.get_string_from_list(words))
         while text_width > self.Config.width:
             self.buf_list.insert(0, words.pop())
-            text_width = self.get_line_width(' '.join(words))
-        final_words = []
-        for word in words:
-            string = word.replace('\n', ' ')
-            if word == '':
-                string = word.replace('', ' ')
-            final_words.append(string)
-        return final_words
+            text_width = self.get_line_width(self.get_string_from_list(words))
+            print(self.get_string_from_list(words).split(" "))
+        return words
     # #### end of minor functions
     # #### here
 
@@ -110,7 +127,7 @@ class DrawFunction(object):
         lines = []
         for line in self.lines:
             lines.append(self.adjust_lines_length(line))
-        if self.buf_list:
+        while self.buf_list:
             lines.append(self.adjust_lines_length("", True))
 
         # align center vertically
@@ -122,12 +139,7 @@ class DrawFunction(object):
 
     def draw_align_center(self, lines):
         for line in lines:
-            string_wo_spaces = ''
-            for word in line:
-                if not word == ' ':
-                    string_wo_spaces += word
-                string_wo_spaces += ' '
-            self.indent_left = (self.Config.width - self.get_line_width(string_wo_spaces))/2
+            self.indent_left = (self.Config.width - self.get_line_width(self.get_string_from_list(line)))/2
             self.line_height = self.get_max_height(' '.join(line))
             for word in line:
                 if word == ' ':
