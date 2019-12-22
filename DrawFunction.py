@@ -54,6 +54,10 @@ class DrawFunction(object):
                 self.font_size -= 1
                 self.set_font_size()
 
+    def get_list_from_string(self, string):
+        word_list = string.split(" ")
+        return self.replace_blank_with_spaces(word_list)
+
     def get_string_from_list(self, word_list):
         string = ''
         for word in word_list:
@@ -93,34 +97,31 @@ class DrawFunction(object):
 
     def start_drawing(self):
         # make list where every word have 0 for first fon color and 1 for second font color
+        line_buf = []
         first_font_color = True
         for line in self.lines:
-            for word in line.split(" "):
-                if word:
-                    if word == '':
-                        self.lines_attrib.append(0)
-                    else:
-                        added = False
-                        if word[0] == "*":
-                            if first_font_color:
-                                self.lines_attrib.append(1)
-                            else:
-                                self.lines_attrib.append(0)
-                            first_font_color = not first_font_color
-                            added = True
-                        if not added:
-                            if first_font_color:
-                                self.lines_attrib.append(0)
-                            else:
-                                self.lines_attrib.append(1)
-                        if word[len(word)-1] == "*":
-                            first_font_color = not first_font_color
-                else:
+            for word in self.get_list_from_string(line):
+                if word == '':
                     self.lines_attrib.append(0)
-        # delete '*' from words
-        for x in range(0, len(self.lines)):
-            self.lines[x] = self.lines[x].replace("*", "")
-        # get optimal font size
+                else:
+                    added = False
+                    if word[0] == "*":
+                        if first_font_color:
+                            self.lines_attrib.append(1)
+                        else:
+                            self.lines_attrib.append(0)
+                        first_font_color = not first_font_color
+                        added = True
+                    if not added:
+                        if first_font_color:
+                            self.lines_attrib.append(0)
+                        else:
+                            self.lines_attrib.append(1)
+                    if word[len(word)-1] == "*":
+                        first_font_color = not first_font_color
+            line_buf.append(line.replace("*", ""))
+        self.lines = line_buf
+
         self.get_font_size(self.lines)
 
         # adjust lines width
