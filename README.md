@@ -18,7 +18,6 @@
 	- Wielkość czcionki jest zależna od długości, najdłuższej linijki tak, aby mogła się zmieścić w obrazie, jeżeli nadal będzie
 		za długa, to część słów zostanie przesunięta na początek następnej
 	- Aby część tekstu była zapisana już w następnym obrazie, to oddziel tą część znakiem % w jednej linijce od reszy
-	- **UWAGA** prosiłbym nie dawać kilku spacji koło siebie, nie używać tab'u, oraz najlepiej nie dawać ich na początku oraz końcu linijki
+	- **UWAGA** prosiłbym nie używać tabulatora
 - Uruchomić program ponownie, zdjęcia powinny zostać wygenerowane w folderze images
 - Każdy tekst będzie miał przypisany do siebie folder o takiej samej nazwie jak plik tekstowy
-- Przed następnym użyciem, proszę wyczyścić Folder Images
