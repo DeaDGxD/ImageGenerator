@@ -24,6 +24,7 @@ class DrawFunction(object):
         self.attrib_count = 0
         self.lines = lines
         self.line_height = 0
+        self.lines_left = []
 
     # #### minor functions
     # #### here
@@ -79,19 +80,17 @@ class DrawFunction(object):
         return final_words
 
     def adjust_lines_length(self, lines, empty=False):
-        if empty:
-            words = self.buf_list
-        else:
-            words = self.buf_list + lines.split(" ")
-        self.buf_list = []
+        if not empty:
+            self.buf_list += self.get_list_from_string(lines)
 
-        words = self.replace_blank_with_spaces(words)
-        text_width = self.get_line_width(self.get_string_from_list(words))
-        while text_width > self.Config.width:
-            self.buf_list.insert(0, words.pop())
-            text_width = self.get_line_width(self.get_string_from_list(words))
-            print(self.get_string_from_list(words).split(" "))
-        return words
+        to_return = []
+        text_width = self.get_line_width(self.get_string_from_list(to_return))
+        while text_width + self.get_line_width(' '+self.buf_list[0]) <= self.Config.width:
+            to_return.insert(0, self.buf_list.pop(0))
+            text_width = self.get_line_width(self.get_string_from_list(to_return))
+            if not self.buf_list:
+                break
+        return to_return
     # #### end of minor functions
     # #### here
 
@@ -139,16 +138,28 @@ class DrawFunction(object):
         self.draw_align_center(lines)
 
     def draw_align_center(self, lines):
+        same_page = True
         for line in lines:
-            self.indent_left = (self.Config.width - self.get_line_width(self.get_string_from_list(line)))/2
-            self.line_height = self.get_max_height(' '.join(line))
-            for word in line:
-                if word == ' ':
-                    self.indent_left += self.get_line_width(' ')
-                else:
-                    self.draw_word(word)
+            if self.indent_top + self.get_max_height(''.join(line)) <= self.Config.height and same_page:
+                self.indent_left = (self.Config.width - self.get_line_width(self.get_string_from_list(line)))/2
+                self.line_height = self.get_max_height(' '.join(line))
+                for word in line:
+                    if word == ' ':
+                        self.indent_left += self.get_line_width(' ')
+                    else:
+                        self.draw_word(word)
+                        self.attrib_count += 1
+                self.indent_top += self.line_height
+            else:
+                same_page = False
+                line_left = []
+                for word in line:
+                    word_left = word
+                    if self.lines_attrib[self.attrib_count] == 1:
+                        word_left = '*'+word+'*'
+                    line_left.append(word_left)
                     self.attrib_count += 1
-            self.indent_top += self.line_height
+                self.lines_left.append(self.get_string_from_list(line_left))
 
     def draw_word(self, word):
         if self.lines_attrib[self.attrib_count] == 0:
