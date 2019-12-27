@@ -84,9 +84,9 @@ class DrawFunction(object):
             self.buf_list += self.get_list_from_string(lines)
 
         to_return = []
-        text_width = self.get_line_width(self.get_string_from_list(to_return))
+        text_width = 0
         while text_width + self.get_line_width(' '+self.buf_list[0]) <= self.Config.width:
-            to_return.insert(0, self.buf_list.pop(0))
+            to_return.append(self.buf_list.pop(0))
             text_width = self.get_line_width(self.get_string_from_list(to_return))
             if not self.buf_list:
                 break
