@@ -16,18 +16,18 @@ if not os.path.isdir('images'):
 if not os.path.isdir('teksty'):
     os.mkdir('teksty')
     test_file = open('teksty/test.txt', 'w')
-    test_file.write('To jest wiadomość testowa\n')
+    test_file.write('This is test message\n')
     test_file.write('%\n')
-    test_file.write('Aby *pokazać jak działa* program')
+    test_file.write('To *show you* how to use this program')
     test_file.close()
 
     test_file2 = open('teksty/test2.txt', 'w')
-    test_file2.write('tutaj kolejny tekst')
+    test_file2.write('Next one')
     test_file2.close()
 
 
 def create_image():
-    print('Tworzenie obrazu numer: '+str(x))
+    print('Creating image no.: '+str(x))
 
     img = Image.new('RGB', (Config.width, Config.height), color=Config.background_color)
     draw = ImageDraw.Draw(img)
@@ -42,7 +42,7 @@ def create_image():
 
 for file in os.listdir("teksty"):
     if file.endswith(".txt"):
-        print('Konwertowanie pliku: '+file)
+        print('Converting: '+file)
         text_name = os.path.join("teksty", file)
         folder_name = os.path.join('images/', file[:-4])
 
