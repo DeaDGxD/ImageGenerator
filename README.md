@@ -1,23 +1,15 @@
-### Postarałem się zrobić ten program, jak najbardziej uniwersalnym się tylko dało
+### Main file is DrawImages.py
 
-### Można w nim dostosować sporo różnych opcji, takich jak:
- - maksymalna i minimalna wielkość czcionki (zmienia się zależnie od
-   wielkości obrazu i najdłuższej linijki)
- - wymiary obrazu
- - kolory tła oraz obu czcionek
+This program is converting many .txt files to .jpg with config where you can choose
+- image resolution
+- first and second font color
+- background color
+- min and max font size (automaticaly choose biggest possible for the largest line)
 
+Every .txt file gets his own folder where 1 or more images are created
 
-### Jak używać programu:
-- Uruchomić program, aby móc ustawić config
-    - Kiedy zostanie już stworzony plik config.ini, można go także modyfikować otwierając go np. notatnikiem
-- W folderze teksty, utworzyć dowolną ilość plików tekstowych (.txt)
-- Formatowanie tekstu:
-	- Aby tekst wyświetlał się na kolor drugiej czcionki, użyj znaków `*` (gwiazdki) np: `*teraz jest na* inny *kolor* niż teraz`
-	- Linijki będą wypisywane tak samo, jak w pliku .txt, no chyba, że jest za długa, to częśc słów przejdzie do następnej
-	- **UWAGA** linijki nie przechodzą między następnymi obrazami, także nadmiar w jednym, zostanie ucięty
-	- Wielkość czcionki jest zależna od długości, najdłuższej linijki tak, aby mogła się zmieścić w obrazie, jeżeli nadal będzie
-		za długa, to część słów zostanie przesunięta na początek następnej
-	- Aby część tekstu była zapisana już w następnym obrazie, to oddziel tą część znakiem % w jednej linijce od reszy
-	- **UWAGA** prosiłbym nie używać tabulatora
-- Uruchomić program ponownie, zdjęcia powinny zostać wygenerowane w folderze images
-- Każdy tekst będzie miał przypisany do siebie folder o takiej samej nazwie jak plik tekstowy
+It also shift words to new line, and shift lines to new image if needed
+
+To write in second font, just `im writing *on different color now*`
+
+To switch to next image, place "%" between lines
