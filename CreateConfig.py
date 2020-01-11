@@ -27,13 +27,13 @@ class ConfigClass(object):
         self.max_font_size = self.get_config("max_font_size")
 
     def create_config(self):
-        width = input("szerokość pliku .jpg w px: ")
-        height = input("wysokość pliku .jpg w px: ")
-        font_color = input("Kolor zwykłej czcionki: ")
-        second_font_color = input("Kolor drugiej czcionki: ")
-        background_color = input("Kolor tła: ")
-        min_font_size = input("Minimalna wielkość czcionki: ")
-        max_font_size = input("Maksymalna wielkość czcionki: ")
+        width = input(".jpg image width in px: ")
+        height = input(".jpg image height in px: ")
+        font_color = input("Basic font color: ")
+        second_font_color = input("Second font color: ")
+        background_color = input("Background color: ")
+        min_font_size = input("Min font size: ")
+        max_font_size = input("Max font size: ")
 
         cfg_file = open(self.configfile_name, 'w')
         self.Config.add_section(self.section)
