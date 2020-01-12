@@ -2,12 +2,15 @@ from PIL import ImageDraw, Image, ImageFont
 
 
 class DrawFunction(object):
-    def __init__(self, draw, config, lines):
+    def __init__(self, draw, config, lines, first_font_color):
         self.lines = lines
         self.draw = draw
         self.Config = config
         # default font_size is the max one
         self.font_size = self.Config.max_font_size
+        # font change mark
+        self.font_state_change = '*'
+        self.first_font_color = first_font_color
         self.font = ImageFont.truetype("arial.ttf", self.font_size)
         # test image, to test font sizes on it
         self.test_draw = ImageDraw.Draw(
@@ -116,30 +119,28 @@ class DrawFunction(object):
         # if first word printed had to be in second font color, then lines_attrib[0] is 1
         # if word is in first color then lines_attrib is 0
         # if you want to change font_color state identifier, change font_state variable
-        font_state = '*'
         line_buf = []
         # use first_font_color first
-        first_font_color = True
         for line in self.lines:
             for word in self.get_list_from_string(line):
                 added = False
                 # if word starts with * use the other font color and change first_font_color variable to the other state
-                if word[0] == font_state:
-                    if first_font_color:
+                if word[0] == self.font_state_change:
+                    if self.first_font_color:
                         self.lines_attrib.append(1)
                     else:
                         self.lines_attrib.append(0)
-                    first_font_color = not first_font_color
+                    self.first_font_color = not self.first_font_color
                 else:
-                    if first_font_color:
+                    if self.first_font_color:
                         self.lines_attrib.append(0)
                     else:
                         self.lines_attrib.append(1)
                 # if there is * at the end of the word, change first_font_color state
-                if word[-1] == font_state:
-                    first_font_color = not first_font_color
+                if word[-1] == self.font_state_change:
+                    self.first_font_color = not self.first_font_color
             # remove every * cause its not needed anymore
-            line_buf.append(line.replace(font_state, ""))
+            line_buf.append(line.replace(self.font_state_change, ""))
         self.lines = line_buf
 
         # get optimal (that function still can be changed, but its working fine i guess) font_size 
@@ -188,7 +189,7 @@ class DrawFunction(object):
                     for word in line:
                         word_left = word
                         if self.lines_attrib[self.attrib_count] == 1:
-                            word_left = font_state+word+font_state
+                            word_left = self.font_state_change+word+self.font_state_change
                         line_left.append(word_left)
                         self.attrib_count += 1
                     self.lines_left.append(self.get_string_from_list(line_left))

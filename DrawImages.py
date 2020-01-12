@@ -38,8 +38,13 @@ def create_image(folder_name, text):
     draw = ImageDraw.Draw(img)
 
     # draw
-    draw_function = DrawFunction(draw, Config, text)
+    # get first_font_color variable from outside of function, to know whether first image ended up with
+    # first or second color
+    global first_font_color
+    draw_function = DrawFunction(draw, Config, text, first_font_color)
     draw_function.start_drawing()
+    # get last font color used for image
+    first_font_color = draw_function.first_font_color
 
     # save image
     img.save(os.path.join(folder_name, 'img'+str(x)+'.jpg'))
@@ -48,6 +53,8 @@ def create_image(folder_name, text):
     return draw_function.lines_left
 
 
+# define default font color
+first_font_color = True
 # for every txt file in source_folder
 for file in os.listdir(source_folder):
     if file.endswith(".txt"):
